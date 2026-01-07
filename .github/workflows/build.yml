@@ -31,15 +31,15 @@ jobs:
         run: west init -l config
       - name: West Update
         run: west update
-      - name: West Zephyr export
-        run: west zephyr-export
+##      - name: West Zephyr export
+##        run: west zephyr-export
       - name: West Build (8key_macropad)
         run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD=8key_pad -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-      - name: 8key_macropad DTS File
-        if: ${{ always() }}
-        run: cat -n build/zephyr/nice_nano_v2.dts.pre.tmp
-      - name: 8key_macropad Kconfig file
-        run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
+##      - name: 8key_macropad DTS File
+##        if: ${{ always() }}
+##        run: cat -n build/zephyr/nice_nano_v2.dts.pre.tmp
+##      - name: 8key_macropad Kconfig file
+##        run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
       - name: Rename zmk.uf2
         run: cp build/zephyr/zmk.uf2 8key_pad_nice_nano_v2.uf2
       - name: Archive (8key_macropad)
