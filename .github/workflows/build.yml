@@ -9,32 +9,35 @@ jobs:
       image: zmkfirmware/zmk-build-arm:2.5
     name: Build
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache west modules
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-zephyr-modules
-        with:
-          path: |
-            modules/
-            tools/
-            zephyr/
-            bootloader/
-            zmk/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('manifest-dir/west.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: West Init
-        run: west init -l config
-      - name: West Update
-        run: west update
-##      - name: West Zephyr export
-##        run: west zephyr-export
-      - name: West Build (8key_macropad)
-        run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD=8key_pad -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+- name: Checkout
+  uses: actions/checkout@v2
+
+- name: West Init
+  run: west init -l .
+
+- name: West Update
+  run: west update
+
+- name: Cache west modules
+  uses: actions/cache@v4
+  env:
+    cache-name: cache-zephyr-modules
+  with:
+    path: |
+      modules/
+      tools/
+      zephyr/
+      bootloader/
+      zmk/
+    key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('manifest.yml') }}
+    restore-keys: |
+      ${{ runner.os }}-build-${{ env.cache-name }}-
+      ${{ runner.os }}-build-
+      ${{ runner.os }}-
+
+- name: West Build (8key_macropad)
+  run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD=8key_pad -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+
 ##      - name: 8key_macropad DTS File
 ##        if: ${{ always() }}
 ##        run: cat -n build/zephyr/nice_nano_v2.dts.pre.tmp
